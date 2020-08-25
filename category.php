@@ -11,8 +11,11 @@
                     Tin thể thao
                     <small>Bóng đá</small>
                 </h1>
-        <?php //SHOW ALL POST TO HOME PAGE
-            $query = "SELECT * FROM posts";
+        <?php //SHOW ALL POST TO HOME PAGE FROM CATEGORY LINK
+            if(isset($_GET['category'])) {
+                $post_category_id = ($_GET['category']);
+            }
+            $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
             $select_all_posts_query = mysqli_query($connection, $query);
 
             while($row = mysqli_fetch_assoc($select_all_posts_query)) {
@@ -22,11 +25,7 @@
                 $post_date = $row['post_date'];
                 $post_image = $row['post_image'];
                 $post_content = substr($row['post_content'], 0, 100);
-                $post_status = $row['post_status'];
-
-                if($post_status != 'published') {
-                    echo "<h1 class='text-center'>HAVE NO POST HERE, SORRY</h1>";
-                } else {       
+                
         ?>  
                 <h2>
                     <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title ?></a>
@@ -45,8 +44,8 @@
                 <p><?php echo $post_content ?></p>
                 <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
                 <hr>
-        <?php } }
-        // END SHOW ALL POST TO HOME PAGE
+        <?php } 
+        // END SHOW ALL POST TO HOME PAGE FROM CATEGORY LINK
         ?>
             </div>
 

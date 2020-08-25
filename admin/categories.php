@@ -12,28 +12,12 @@
                             Welcome to admin
                             <small>Author</small>
                         </h1>
-
+                        <!--Add/Update Category Form-->
                         <div class="col-xs-6">
-                    
-                        <?php // Add a category
-                            if(isset($_POST['submit'])) {
-                                $cat_title = $_POST['cat_title'];
-
-                                if($cat_title == "" || empty($cat_title)) {
-                                    echo "Dữ liệu nhập không được trống";
-                                } else {
-                                    $query = "INSERT INTO categories(cat_title) ";
-                                    $query .= "VALUE('{$cat_title}') ";
-                                    $create_category_query = mysqli_query($connection, $query);
-
-                                    if(!$create_category_query) {
-                                        die('QUERY FAILED' . mysqli_error($connection));
-                                    }
-
-                                }
-                            }
+                        <?php // ADD A CATEGORY FUNCTION 
+                            insert_categories(); 
                         ?> 
-
+                            <!--Add form-->
                             <form action="" method="post">
                                 <div class="form-group">
                                     <label for="cat-title">Add Category</label>
@@ -42,48 +26,38 @@
                                 <div class="form-group">
                                     <input class="btn btn-primary" type="submit" name="submit" value="Add Category">
                                 </div>
-                            </form>
-                        </div> <!--Add Category Form-->
-
-                        <div class="col-xs-6">
-
+                            </form> <!--/Add form-->
+                            
+                        <?php // INCLUDE update_categories.php
+                            if(isset($_GET['edit'])) {
+                                $cat_id  = $_GET['edit'];
+                                include "includes/update_categories.php";
+                            }
+                        ?>
+                           
+                        </div> <!--/Add/Update Category Form-->
                         
+                        <!--Table show all categories-->
+                        <div class="col-xs-6">
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
                                         <th>Category Title</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
+                                <?php //FIND ALL CATEGORIES 
+                                    findAllCategories(); 
+                                ?> 
                                 
-                                <?php //Show all categories
-                                    $query = "SELECT * FROM categories";
-                                    $select_categories = mysqli_query($connection, $query);
-                                    while($row = mysqli_fetch_assoc($select_categories)) {
-                                        $cat_id = $row['cat_id'];
-                                        $cat_title = $row['cat_title'];
-                                ?>
-                                    <tr>
-                                        <td><?php echo $cat_id ?></td>
-                                        <td><?php echo $cat_title ?></td>
-                                        <td><a href="categories.php?delete=<?php echo $cat_id ?>">Delete</a></td>
-                                    </tr>
-                                <?php } ?>
-                                
-                                <?php //Delete a category
-                                    if(isset($_GET['delete'])) {
-                                        $the_cate_id = $_GET['delete'];
-                                        $query = "DELETE FROM categories WHERE cat_id = {$the_cate_id}";
-                                        $delete_query = mysqli_query($connection, $query);
-                                        header("Location: categories.php");
-                                    }
+                                <?php //DELETE A CATEGORY
+                                    deleteCategories();
                                 ?>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> <!--/Table show all categories-->
                     </div>
                 </div>
                 <!-- /.row -->
