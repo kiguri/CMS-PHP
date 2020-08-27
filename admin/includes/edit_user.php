@@ -15,13 +15,13 @@
             $user_email      = $row['user_email'];
             $user_image      = $row['user_image'];
             $user_role       = $row['user_role'];
-        }  
+            $randSalt        = $row['randSalt'];
+        }
+        
+       
     }
-
     //UPDATE USER
     if(isset($_POST['edit_user'])) {
-
-
         $user_firstname  = $_POST['user_firstname'];
         $user_lastname   = $_POST['user_lastname'];
         $user_role       = $_POST['user_role'];
@@ -35,6 +35,8 @@
 
 
         // move_uploaded_file($post_image_temp, "../images/$post_image");
+        
+        $hashed_password = crypt($user_password, $randSalt);
 
         $query = "UPDATE users SET ";
         $query .= "user_firstname = '{$user_firstname}', ";
@@ -42,7 +44,7 @@
         $query .= "user_role = '{$user_role}', ";
         $query .= "username = '{$username}', ";
         $query .= "user_email = '{$user_email}', ";
-        $query .= "user_password = '{$user_password}' ";
+        $query .= "user_password = '{$hashed_password}' ";
         $query .= "WHERE user_id = {$the_user_id}";
 
         $edit_user_query = mysqli_query($connection, $query);
@@ -71,7 +73,7 @@
     
     <div class="form-group">
         <select name="user_role" id="">
-            <option value='subscriber'><?php echo $user_role ?></option>
+            <option value='<?php echo $user_role ?>'><?php echo $user_role ?></option>
             <?php //SHOW PULLDOWN ROLE
                 if($user_role == 'admin') {
                     echo "<option value='subscriber'>subscriber</option>";
